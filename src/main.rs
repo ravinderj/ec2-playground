@@ -1,10 +1,9 @@
+use ec2_bridge::ec2::Ec2IpAddress;
 use rusoto_core::Region;
 use rusoto_ec2::DescribeInstancesRequest;
 use rusoto_ec2::Ec2;
 use rusoto_ec2::Ec2Client;
 use rusoto_ec2::Filter;
-use rusoto_ec2::Instance;
-use serde::{Serialize, Deserialize};
 
 fn main() {
     let client = Ec2Client::new(Region::EuWest1);
@@ -41,19 +40,4 @@ fn main() {
     let json = serde_json::to_string_pretty(&ip_addresses).unwrap();
 
     println!("{}", json);
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-struct Ec2IpAddress {
-    public_ip: Option<String>,
-    private_ip: Option<String>,
-}
-
-impl Ec2IpAddress {
-    pub fn from_instance(instance: Instance) -> Self {
-        Ec2IpAddress {
-            public_ip: instance.public_ip_address,
-            private_ip: instance.private_ip_address,
-        }
-    }
 }
